@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - {{ article.titre }}{% endblock %}
+
+{% block body %}
+<a href="{{ path("actu") }}" class="btn btn-primary">Retour</a>
+<div class="container">
+				<h1 class="display-3">{{ article.titre }}</h1>
+				<small class="text-muted">Ecrit le {{ article.date | date('d/m/Y') }} à {{ article.date | date('H:i') }}</small>
+				<hr class="my-4">
+				<p class="lead">
+					{{ article.contenu | nl2br }}				
+				</p>
+				{% if app.user and is_granted('ROLE_ADMIN') %} 
+					<div class="text-center">
+						<a href="{{ path('editionarticle',{'id': article.id}) }}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" style="color: white;"></span> Modifier</a>
+						<a href="{{ path('supprimerarticle',{'id': article.id}) }}" class="btn btn-danger"><span class="glyphicon glyphicon-remove" style="color: white;"></span> Supprimer</a>
+					</div>
+				{% endif %}
+			</div>
+{% endblock %}
+

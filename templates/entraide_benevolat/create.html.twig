@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% form_theme formFiche 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}
+    {% if editMode %} - Modification{% else %} - Création{% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron">
+    <a href="{{ path('fiche_entraide_benevolat') }}" class="btn btn-primary">Retour</a>
+
+    <h1>
+        {% if editMode %}
+            Modification de la fiche
+        {% else %}
+            Création d'une fiche
+        {% endif %}
+    </h1>
+
+    {{ form_start(formFiche) }}
+
+    {{ form_row(formFiche.title, {'label': 'Titre', 'attr': {'placeholder': "Titre de la fiche"}}) }}
+    {{ form_row(formFiche.content, {'label': 'Contenu', 'attr': {'placeholder': "Contenu de la fiche"}}) }}
+    {{ form_row(formFiche.typeFiche) }}
+
+    <button type="submit" class="btn btn-success">
+        {% if editMode %}
+            <span class="fas fa-check"></span> Enregistrer les modifications
+        {% else %}
+            <span class="fas fa-check"></span> Ajouter la fiche
+        {% endif %}
+    </button>
+
+    {{ form_end(formFiche) }}
+</div>
+
+{% endblock %}

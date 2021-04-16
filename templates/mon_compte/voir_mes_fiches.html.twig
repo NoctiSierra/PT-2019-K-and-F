@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir mes fiches{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron">
+	<a href="{{ path('mon_compte') }}" class="btn btn-primary">Retour</a>
+
+	<h3>Voici les fiches que vous avez créées</h3>
+
+	<h4>Vos fiches "Bénévole/Talent"</h4>
+	<div class="cus-container">
+		<br />
+		{% for fiche in fiches %}
+			{% if fiche.typeFiche.nom == 'Bénévole/Talent' %}
+				<a href="{{ path('fiche_show', {'id': fiche.id}) }}" class="">
+				<div class="card border-primary mb-3 " style="max-width: 20rem;">
+					<div class="card-header">Titre : {{ fiche.title }}</div>
+					<div class="card-body">
+						<p class="card-text cus-item">{{ fiche.content | raw }}</p>
+					</div>
+					<div class="card-footer">
+						<p class="">Écrit par {{ fiche.author.nom }} le {{ fiche.createdAt | date('d/m/Y') }} à {{ fiche.createdAt | date('H:i') }}</p>
+					</div>
+				</div>
+				</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+	<h4>Vos fiches "Don"</h4>
+	<div class="cus-container">
+		{% for fiche in fiches %}
+			{% if fiche.typeFiche.nom == 'Don' %}
+				<a href="{{ path('fiche_show', {'id': fiche.id}) }}" class="">
+				<div class="card border-primary mb-3 " style="max-width: 20rem;">
+					<div class="card-header">Titre : {{ fiche.title }}</div>
+					<div class="card-body">
+						<p class="card-text cus-item">{{ fiche.content | raw }}</p>
+					</div>
+					<div class="card-footer">
+						<p class="">Écrit par {{ fiche.author.nom }} le {{ fiche.createdAt | date('d/m/Y') }} à {{ fiche.createdAt | date('H:i') }}</p>
+					</div>
+				</div>
+				</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+	<h4>Vos fiches "Projet"</h4>
+	<div class="cus-container">
+		{% for fiche in fiches %}
+			{% if fiche.typeFiche.nom == 'Projet' %}
+				<a href="{{ path('fiche_show', {'id': fiche.id}) }}" class="">
+				<div class="card border-primary mb-3 " style="max-width: 20rem;">
+					<div class="card-header">Titre : {{ fiche.title }}</div>
+					<div class="card-body">
+						<p class="card-text cus-item">{{ fiche.content | raw }}</p>
+					</div>
+					<div class="card-footer">
+						<p class="">Écrit par {{ fiche.author.nom }} le {{ fiche.createdAt | date('d/m/Y') }} à {{ fiche.createdAt | date('H:i') }}</p>
+					</div>
+				</div>
+				</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+
+<style>
+	.cus-item{
+		block-size: 100px;
+		display: flex;
+		overflow: auto;
+	}
+</style>
+
+{% endblock %}

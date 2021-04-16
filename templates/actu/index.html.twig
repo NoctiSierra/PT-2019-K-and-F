@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - L'actu{% endblock %}
+
+{% block body %}
+	{% if app.user %}
+		{% if is_granted('ROLE_ADMIN') %}
+			<div class="mx-auto text-center mb-3">
+				<a class="btn btn-success mx-auto" href="{{ path("createarticle") }}"><span class="glyphicon glyphicon-plus"></span>Ajouter un article</a>
+			</div>
+		{% endif %}
+	{% endif %}
+	<div class="row d-flex">
+		{% for article in articles %}
+			{% set preview = article.contenu |split('',100) %}
+			<div class="card border-dark mx-auto mb-3 col-4">
+				<div class="card-header text-center"><h3>{{ article.titre }}</h3></div>
+				<div class="card-body">
+					<span>{{ preview[0] }} ... </span>
+					<hr class="my-4">
+					<small class="text-muted">Ecrit le {{ article.date | date('d/m/Y') }} à {{ article.date | date('H:i') }}</small>
+				<div class="card-footer text-center">
+						<a class="btn btn-success" href="{{ path('showarticle', {'index': article.id}) }}" role="button">
+							<span class="fas fa-book" style="color: white;" ></span> Lire</a>
+							{% if app.user %}
+								{% if is_granted('ROLE_ADMIN') %} 
+									<a href="{{ path('editionarticle',{'id': article.id}) }}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" style="color: white;"></span> Modifier</a>
+									<a href="{{ path('supprimerarticle',{'id': article.id}) }}" class="btn btn-danger"><span class="glyphicon glyphicon-remove" style="color: white;"></span> Supprimer</a>
+								{% endif %}
+							{% endif %}
+				</div>
+			</div>
+		</div>
+		{% else %}
+			<div class="alert alert-dismissible alert-danger"><h1>Aucun article n'a été écrit.</h1></div>
+		{% endfor %}
+	</div>
+	<div class="text-center">
+		<div class="pagination justify-content-center">
+			{{ knp_pagination_render(articles) }}
+		</div>
+	</div>
+{% endblock %}

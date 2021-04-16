@@ -1,0 +1,78 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %} - Ajouter un Topic{% endblock %}
+
+{% block body %}
+
+{{ form_start(form) }}
+
+<div class="card" style="margin-top: 50px;">
+
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home_forum') }}">
+                    Home
+                </a>
+            </li>
+            <li class="nav-item">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('show_categorie', {'nomCat': categorie.nom}) }}">
+                        {{ categorie.nom }}
+                    </a>
+                    {% else %}
+                        <a class="nav-link" href="{{ path('home_forum') }}">
+                            {{ categorie.nom }}
+                        </a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('list_topics', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                    {{ sousCategorie.nom }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active disabled">Ajouter un Topic</a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card-body" style="padding-bottom: 50px; width: 80%; margin: auto auto;">
+
+        <div class="media" style="margin-top: 20px;">
+            <img src="{{ asset('img/message_gauche.png') }}" style="width: 64px; height: 64px;" class="align-self-start mr-3" alt="...">
+            <div class="media-body border border-light" style="border-radius: 30px; padding: 20px; background-color: #F2F2F2;">
+                <h5 class="mt-0 mb-1" style="font-size: 20px;">
+                    <a style="text-decoration:none; color: #424242;" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <span class="glyphicon glyphicon-user" style="font-size: 30px; margin-right: 5px;"></span>
+                        {{ currentUser.login }} (Vous)
+                    </a>
+                </h5>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body" style="font-size: 18px; padding: 15px; background-color: #F2F2F2; border-width: 0px; border-left-width: 2px;">
+                        <p>Description du user</p>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 20px; padding: 15px; background-color: #F2F2F2; border-width: 0px; border-left-width: 2px;">
+                    <p style="font-size: 20px;">
+                        Titre: {{ form_widget(form.titre) }}
+                    </p>
+                    <p style="font-size: 17px; margin-top: 10px;">
+                        Contenu: {{ form_widget(form.contenu) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-right: auto; margin-left: auto; text-align: center; margin-top: 50px;">
+    {{ form_widget(form.confirmer) }}
+    <a class="btn btn-secondary" href="{{ path('show_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+        Annuler
+    </a>
+</div>
+
+{{ form_end(form) }}
+
+{% endblock %}

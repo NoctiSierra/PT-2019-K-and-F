@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Création d'une fiche{% endblock %}
+
+{% block body %}
+
+<a href="{{ path('fiche_entraide_benevolat') }}" class="btn btn-primary">Retour</a>
+<div class="container">
+    <div class="row d-flex">
+      {% for fiche in fiches | reverse %}
+        <div class="card border-dark mb-3 col-4 mx-auto">
+          <div class="card-header text-center"><h3>{{ fiche.title }}</h3></div>
+          <div class="card-body">
+            <p class="">Écrit par {{ fiche.author.nom }} le {{ fiche.createdAt | date('d/m/Y') }} à {{ fiche.createdAt | date('H:i') }}</p>
+          </div>
+          <div class="card-footer text-center">
+            <a class="btn btn-success" href="{{ path('fiche_show', {'id': fiche.id}) }}"><span class="fas fa-book" style="color: white;" ></span> Lire</a>
+            {% if is_granted('ROLE_ADMIN') or (app.user == fiche.author) %}
+                <a href="{{ path('fiche_edit', {'id': fiche.id}) }}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" style="color: white;"></span> Éditer</a>
+                <a href="{{ path('fiche_delete', {'id': fiche.id}) }}" class="btn btn-danger"><span class="glyphicon glyphicon-remove" style="color: white;"></span> Supprimer</a>
+            {% endif %}
+            </div>
+        </div>
+      {% else %}
+        <div class="alert alert-dismissible alert-danger"><h1>Aucune fiche n'a été créée dans cette catégorie.</h1></div>
+      {% endfor %}
+      <div class="pagination mx-auto">
+        {{ knp_pagination_render(fiches) }}
+      </div>
+    </div>
+{% endblock %}

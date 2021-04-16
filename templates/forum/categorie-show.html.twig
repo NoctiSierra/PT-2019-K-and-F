@@ -1,0 +1,264 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %} - Gestion des catégries{% endblock %}
+
+{% block body %}
+
+{# Message comportant le guide #}
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">
+                    <b>Guide</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    <b>Gestion des catégories:</b>
+                </h4>
+                <h5>
+                    <i>Modifier une catégorie:</i>
+                </h5>
+                <a class="btn btn-warning" style="color: white;">
+                    <span class="glyphicon glyphicon-pencil" style="color: white;"></span>
+                    Modifier une catégorie
+                </a>
+                <p>
+                    Renvoie vers une page dans laquelle vous pourrez modifier le nom
+                    de la catégorie et également sa description.
+                </p>
+                <br>
+                <h5>
+                    <i>Supprimer une catégorie:</i>
+                </h5>
+                <a class="btn btn-danger" style="color: white;">
+                    <span class="glyphicon glyphicon-remove" style="color: white;"></span>
+                    Supprimer une catégorie
+                </a>
+                <p>
+                    Renvoie un message de confirmation. Si vous maintenez la suppression,
+                    tous les composants associés à la catégorie seront supprimés (sous-catégories, topics).
+                </p>
+                <br>
+                <h4>
+                    <b>Gestion des sous-catégories:</b>
+                </h4>
+                <h5>
+                    <i>Ajouter une sous-catégorie:</i>
+                </h5>
+                <a class="btn btn-success" style="color: white;">
+                    <span class="glyphicon glyphicon-plus" style="color: white;"></span>
+                    Ajouter une sous-catégorie
+                </a>
+                <br>
+                <p>
+                    Renvoie vers une page dans laquelle vous pourrez remplir le nom
+                    de la sous-catégorie à ajouter.
+                </p>
+                <br>
+                <h5>
+                    <i>Modifier une sous-catégorie:</i>
+                </h5>
+                <a class="btn btn-warning" style="color: white;">
+                    <span class="glyphicon glyphicon-pencil" style="color: white;"></span>
+                </a>
+                <br>
+                <p>
+                    Renvoie vers une page dans laquelle vous pourrez modifier le nom
+                    de la sous-catégorie.
+                </p>
+                <br>
+                <h5>
+                    <i>Supprimer une sous-catégorie:</i>
+                </h5>
+                <a class="btn btn-danger" style="color: white;">
+                    <span class="glyphicon glyphicon-remove" style="color: white;"></span>
+                </a>
+                <br>
+                <p>
+                    Renvoie un message de confirmation. Si vous maintenez la suppression,
+                    tous les composants associés à la sous-catégorie seront supprimés (topics).
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Affichage du nom et de la description de la catégorie #}
+<div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+    <h1 class="display-2">{{ categorie.nom }}</h1>
+    <p>{{ categorie.description }}</p>
+</div>
+
+{# Modification et Suppression d'une catégorie #}
+<div style="text-align: center; margin-bottom: 30px;">
+    <a class="btn btn-warning" href="{{ path('edit_categorie', {'nomCat': categorie.nom }) }}">
+        <span class="glyphicon glyphicon-pencil"></span>
+        Modifier cette catégorie
+    </a>
+    {# Possibilité de supprimer une catégorie #}
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#supressionCategorie">
+        <span class="glyphicon glyphicon-remove"></span>
+        Supprimer cette catégorie
+    </button>
+
+    {# Message de confirmation de la suppression d'une catégorie #}
+    <div class="modal fade" id="supressionCategorie" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">
+                        <b>Supprimer une catégorie</b>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="text-align: left; font-size: 15px;">
+                    Êtes-vous sûr de vouloir supprimer cette catégorie ?<br>
+                    Tous les composants reliés à cette catégorie seront supprimés (sous-catégories et topics).<br>
+                </div>
+                <div class="modal-footer">
+                    
+                    <a class="btn btn-danger" href="{{ path('delete_categorie', {'nomCat': categorie.nom}) }}">
+                        Supprimer
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+
+    {# Fil d'Arianne #}
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            {# On affiche le lien vers l'accueil du forum #}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active disabled">{{ categorie.nom }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-body" style="margin-bottom: 10px; width: 80%; margin: auto auto;">
+
+        <div style="text-align: right; margin-bottom: 20px; width">
+
+            {# Ajouter une sous-catégorie #}
+            <a class="btn btn-success" href="{{ path('add_sous_categorie', {'nomCat': categorie.nom }) }}">
+                <span class="glyphicon glyphicon-plus"></span>
+                Ajouter une sous-catégorie
+            </a>
+
+            {# Guide #}
+            <a style="font-size: 25px; padding: 10px; vertical-align: middle;" data-toggle="modal" data-target="#exampleModalScrollable" href="#">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+
+        </div>
+
+        {# Tableau contenant les sous-catégories appartenant à la catégorie précédemment sélectionnée #}
+        <table class="table table-hover">
+            <thead>
+                {# Affichage des en-têtes de chaque colonne #}
+                <tr>
+                    <th style="width: 20%; text-align: center;">SOUS-CATEGORIES</th>
+                    <th style="width: 20%; text-align: center;">TOPICS</th>
+                    <th style="width: 20%; text-align: center;">GESTION</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+
+                {# On parcourt les sous-catégories présentes dans la catégorie sélectionnée précédemment #}
+                {% for sousCategorie in categorie.sousCategories %}
+                    <tr style="font-size: 18px;">
+
+                        {# Dans la première colonne, on affiche le nom des sous-catégories et le lien vers l'affichage des topics que contient cette sous-catégorie #}
+                        <th style="text-align: center;">
+                            <a href="{{ path('list_topics', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                                {{ sousCategorie.nom }}
+                            </a>
+                        </th>
+
+                        {# Dans la deuxième colonne, on affiche le nombre de topics reliés à cette sous-catégorie #}
+                        <td style="text-align: center;">
+                            {{ sousCategorie.topics | length }}
+                        </td>
+
+                        {# Dans la troisième colonne, on affiche les boutons de gestion des sous-catégories (modification et suppression) #}
+                        <td style="text-align: center;">
+
+                            {# Modification d'une sous-catégorie #}
+                            <a class="btn btn-warning" href="{{ path('edit_sous_categorie', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+
+                            {# Suppression d'une sous-catégorie #}
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#suppressionSousCat">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+
+                            {# Message de confirmation de la suppression d'une sous-catégorie #}
+                            <div class="modal fade" id="suppressionSousCat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="exampleModalLabel">
+                                                <b>Supprimer une sous-catégorie</b>
+                                            </h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: left; font-size: 15px;">
+                                            Êtes-vous sûr de vouloir supprimer cette sous-catégorie ?<br>
+                                            Tous les topics reliés à cette sous-catégorie seront supprimés.<br>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-danger" href="{{ path('delete_sous_categorie', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                                                Supprimer
+                                            </a>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                Fermer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{# Retour #}
+<div style="text-align: center; margin-top: 50px;">
+    <a class="btn btn-secondary" href="{{ path('home_forum') }}">
+        Retour
+    </a>
+</div>
+
+{% endblock %}

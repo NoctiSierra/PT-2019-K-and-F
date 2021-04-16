@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %} - Inscription {% endblock %}
+
+{% block body %}
+<div class="container mb-3 mx-auto">
+	<center><h1>Inscription</h1></center>
+	{{ form_start(registrationForm) }}
+
+	
+	<div class="row">
+		<div class="col-7">
+	      {{ form_row(registrationForm.nom, { 'label': 'Nom' }) }}
+	    </div>
+	    <div class="col-5">  
+		{{ form_row(registrationForm.email, { 'label': 'Email' }) }}
+	    </div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+	      {{ form_row(registrationForm.password, { 'label': 'Mot de passe' }) }}
+	    </div>
+	    <div class="col-sm">  
+		{{ form_row(registrationForm.confirmMdp, { 'label': 'Confirmer le mot de passe' }) }}
+	    </div>
+	</div>
+
+	{{ form_row(registrationForm.adresse) }}
+	
+
+	<div class="row">
+		<div class="col-8">
+	      {{ form_row(registrationForm.login) }}
+	    </div>
+	    <div class="col-4">
+	      {{ form_row(registrationForm.numero, { 'label': 'Numéro de téléphonne' }) }}
+	    </div>
+	</div>
+
+
+	{{ form_widget(registrationForm) }}
+	<center>
+		<button type="submit" class="btn btn-success">Inscription</button>
+	</center>
+	{{ form_end(registrationForm) }}
+</div>
+
+{% endblock %} 

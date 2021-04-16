@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+{% block title %}- Page d'accueil{% endblock %}
+
+{% block body%}
+	<h1>Kids&Family</h1>
+	<p>Notre volonté : Faire vivre des expériences, recréer des moments de partage et de lien, porteurs de valeurs</p>
+
+	<div>
+
+{# 
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Collapsible Group Item #1
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+		<div style="display: inline-block; width: 20%; vertical-align: top;">
+			<div class="card" style="width: 18rem;">
+				<div class="card-header">
+					Featured
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						Actus K&F
+					</li>
+					<li class="list-group-item">
+						Mes projets
+					</li>
+					<li class="list-group-item">
+						Vie de quartier
+					</li>
+					<li class="list-group-item">
+						Forum
+					</li>
+					<li class="list-group-item">
+						Bons plans
+					</li>
+					<li class="list-group-item">
+						Agenda partagé
+					</li>
+					<li class="list-group-item">
+						Entraide&Bénévolat
+					</li>
+					<li class="list-group-item">
+						Prêts&Dons
+					</li>
+					<li class="list-group-item">
+						Proposer un acteur
+					</li>
+				</ul>
+			</div>
+		</div>
+ #}
+		{% set nb_articles = 0 %}
+		{% set nb_max_articles = 4 %}
+
+		<div style="display: inline-block; width: 70%;">
+
+		</div>
+
+		<div style="margin-top: 50px;">
+
+			<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="text-align: center;">
+				<div class="carousel-inner">
+
+					{% for article in articles | reverse %}
+
+						{% if nb_articles <= articles | length %}
+
+							{% if nb_articles == 0 %}
+								<div class="carousel-item active">
+							{% endif %}
+
+							{% if (nb_articles%4 == 0) and (nb_articles != 0) %}
+								</div>
+								<div class="carousel-item">
+							{% endif %}
+
+							<div class="card-deck" style="display: inline-block; width: 25%; margin-bottom: 20px; text-align: left;">
+								<div class="card">
+									<img src="http://placehold.it/300x300" class="card-img-top" alt="...">
+									<div class="card-body">
+										<div>
+											<h4 class="card-title">{{ article.titre }}</h4>
+										</div>
+										<div style="text-align: right; margin-top: 10px;">
+											<a style="text-decoration: none;" href="{{ path('showarticle', {'index': article.id }) }}">
+												Lire plus >>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							{% set nb_articles = nb_articles+1 %}
+
+						{% endif %}
+
+					{% endfor %}
+
+				</div>
+				<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="width: 5%;">
+					<i class="fas fa-chevron-circle-left" style="color: gray; font-size: 35px;"></i>
+				</a>
+				<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="width: 5%;">
+					<i class="fas fa-chevron-circle-right" style="color: gray; font-size: 35px;"></i>
+				</a>
+			</div>
+
+		</div>
+	
+	
+	</div>
+
+
+
+
+	{#<div style="text-align: center;">
+		{% for article in articles | reverse %}
+			{% if nb_articles < nb_max_articles %}
+				<div class="card-deck" style="display: inline-block; width: 25%; margin-bottom: 20px; text-align: left;">
+					<div class="card">
+						<img src="http://placehold.it/300x300" class="card-img-top" alt="...">
+						<div class="card-body">
+							<h4 class="card-title" style="margin-bottom: 15px;">{{ article.titre }}</h4>
+							<a class="btn btn-primary" style="margin-bottom: 15px;" href="{{ path('showarticle', {'index': article.id }) }}">
+								Lire plus >>
+							</a>
+							<br>
+							<small class="text-muted">{{ article.date | date('d-m-Y à H:i:s') }}</small>
+						</div>
+					</div>
+				</div>
+				{% set nb_articles = nb_articles+1 %}
+			{% endif %}
+		{% endfor %}
+	</div>#}
+
+{% endblock %}

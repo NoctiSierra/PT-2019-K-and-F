@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% form_theme formArticle 'bootstrap_4_layout.html.twig' %}
+
+{% block title %} - {% if not modeEdition %}Création{% else %}Modification{% endif %} d'article{% endblock %}
+
+{% block body %}
+	<div class="card border-light mb-3 mx-auto" style="max-width: 70%;">
+		<center>
+			<h1>{% if not modeEdition %}Création{% else %}Modification{% endif %} d'article</h1>
+		</center>
+		
+		{{ form_start(formArticle) }}
+		{{ form_row(formArticle.titre) }}
+		{{ form_row(formArticle.contenu) }}
+		
+		<center>
+		<button type="submit" class="btn btn-success">
+			{% if modeEdition %}
+				<span class="fas fa-check"></span> Enregistrer les modifications
+			{% else %}
+				<span class="fas fa-check"></span> Poster l'article
+			{% endif %}
+
+		</button>
+		</center>
+		{{ form_end(formArticle) }}
+	</div>
+{% endblock %}

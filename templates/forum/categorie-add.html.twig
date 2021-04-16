@@ -1,0 +1,63 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %}- Ajouter un Topic{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+        <h1 class="display-2">Forum</h1>
+        <p>Description de l'espace</p>
+    </div>
+
+    <div class="card" style="margin-top: 50px;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active disabled">Ajouter une Catégorie</a>
+                </li>
+            </ul>
+        </div>
+        
+        {{ form_start(form) }}
+        <div class="card-body" style="padding-bottom: 50px; width: 60%; margin: auto auto;">
+            <div class="card border-primary" style="margin-top: 30px;">
+                <div class="card-header bg-primary" style="font-size: 22px; margin-bottom: 10px; text-align: center;">
+                    <b>Ajouter une catégorie</b>
+                </div>
+                <div class="card-body" style="font-size: 16px; width: 80%; margin: auto auto; margin-bottom: 10px;">
+                    <div>
+                        <div style="display: inline-block; width: 45%; margin-right: 20px;">
+                            {{ form_row(form.idCategorie.nom, { 'label': 'Nom de la catégorie' }) }}
+                        </div>
+                        <div style="display: inline-block; width: 45%;">  
+                            {{ form_row(form.nom, { 'label': 'Nom de la sous-catégorie' }) }}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="width: 95%; margin-top: 15px;">
+                            {{ form_row(form.idCategorie.description, { 'label': 'Description' }) }}
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        {{ form_widget(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    <div style="margin-right: auto; margin-left: auto; text-align: center; margin-top: 50px;">
+        <a class="btn btn-secondary" href="{{ path('home_forum') }}">
+            Annuler
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

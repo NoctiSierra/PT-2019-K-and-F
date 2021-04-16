@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - Mon compte{% endblock %}
+
+{% block body %}
+
+<div style="display: block;">
+
+	<h1 style="text-align: center; margin-bottom: 50px; margin-top: 50px;">
+		<b>Bienvenue {{ currentUser.login }} !</b>
+	</h1>
+
+	<div style="display: inline-block; vertical-align: top; width: 25%; min-height: 300px;">
+
+		<div class="card" style="display: block; width: 100%; min-height: 150px;">
+			<div class="card-header">
+				<b style="font-size: 20px;">Mes Topics</b>
+			</div>
+			<ul class="list-group list-group-flush">
+				{% if currentUser.topics|length != 0 %}
+					{% for topic in currentUser.topics %}
+						{% if topic.idSousCategorie is not null %}
+							<li class="list-group-item">
+								<a style="text-decoration: none;" href="{{ path('show_topic', {'nomCat': topic.idSousCategorie.idCategorie.nom, 'nomSousCat': topic.idSousCategorie.nom, 'titreTopic': topic.titre }) }}">
+									{{ topic.titre }}
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					<li class="list-group-item">
+						Vous n'avez encore rédigé aucun article !<br>
+						Si vous souhaitez en écrire, rendez-vous <a href="{{ path('home_forum') }}">ici</a> !
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+
+		<div class="card" style="display: block; width: 100%; min-height: 150px;">
+			<div class="card-header">
+				<b style="font-size: 20px;">Mes Topics Résolus</b>
+			</div>
+			<ul class="list-group list-group-flush">
+				{% if currentUser.topics | length != 0 %}
+					{% for topic in currentUser.topics %}
+						{% if topic.idSousCategorie is null %}
+							<li class="list-group-item">
+								{{ topic.titre }}
+							</li>
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					<li class="list-group-item">
+						Aucun de vos topics n'a encore été résolu.<br>
+						Patientez encore un peu !
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	
+	</div>
+
+	<div class="jumbotron" style="display: inline-block; width: 50%; min-height: 300px;">
+		<div style="text-align: center;">
+			<div style="display: inline-block; margin-right: 30px;">
+				<img src="{{ asset('img/icone-person.png') }}" alt="..." style="width: 200px;"/>
+			</div>
+			<div style="display: inline-block; vertical-align: middle; text-align: left;">
+				<p style="font-size: 17px;">
+					<b>Nom:</b> {{ currentUser.login }}<br>
+					<b>E-mail:</b> {{ currentUser.email }}<br>
+					<b>Adresse:</b> {{ currentUser.adresse }}<br><br>
+					{% if is_granted('ROLE_ADMIN') == 1 %}
+						Vous êtes un administrateur de ce site.<br><br>
+					{% else %}
+						Vous n'êtes pas un administrateur de ce site.<br><br>
+					{% endif %}
+					<b>Votre description:</b><br>{{ app.user.description }}
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="card" style="display: inline-block; width: 24%; vertical-align: top; min-height: 300px;">
+		<div class="card-header">
+			<b style="font-size: 20px;">Mes Options</b>
+		</div>
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item">	
+				<a href="#">Mes paramètres</a>
+			</li>
+			<li class="list-group-item">
+				<a href="{{ path("voir_mes_fiches") }}">Mes contributions</a>
+			</li>
+			<li class="list-group-item">
+				<a href="#">Mes votes</a>
+			</li>
+			<li class="list-group-item">
+				<a href="#">Mes signalements</a>
+			</li>
+			<li class="list-group-item">
+				<a href="{{ path("changer_parametre") }}">Changer mes parametres</a>
+			</li>
+			<li class="list-group-item">
+				<a href="{{ path("changer_mdp") }}">Changer mon mot de passe</a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<div style="display: block; margin-top: 30px; text-align: center; margin-bottom: 50px;">
+
+	{# On affiche les boîtes de dialogues ouvertes et l'historique des messages reçus #}
+	<div class="card" style="width: 49%; display: inline-block; vertical-align: top; padding: 5px; margin-right: 20px; min-height: 500px;">
+		<div class="card-header" style="margin-bottom: 10px;">
+			<b style="font-size: 20px;">Boîtes de dialogues</b>
+		</div>
+		<div class="card-body">
+			{# On parcourt les personnes qui ont répondu au topic #}
+			{% if posteurs is defined %}
+				{% for posteur in posteurs %}
+					{% if posteur[0].topic.idSousCategorie is not null %}
+						<div class="card mb-3" style="max-width: 540px; margin: auto auto;">
+							<div class="row no-gutters">
+								<img src="{{ asset('img/user.png') }}" class="card-img" style="width: 110px; height: 110px;" alt="...">
+								<div class="col-md-8">
+									<div class="card-body">
+										{# Affichage du pseudo de la personne qui a répondu au topic #}
+										<p class="card-text">
+											Une boîte de dialogue a été ouverte avec vous par<br>
+											<b>{{ posteur[0].posteur.login }}</b> concernant le topic <br>
+											<a href="{{ path('show_topic', {'nomCat': posteur[0].topic.idSousCategorie.idCategorie.nom, 'nomSousCat': posteur[0].topic.idSousCategorie.nom, 'titreTopic': posteur[0].topic.titre }) }}">
+												{{ posteur[0].topic.titre }}
+											</a>
+										</p>
+										{# Accès vers la boîte de dialogue #}
+										{% if posteur[0].topic.idSousCategorie != null %}
+											<a class="btn btn-primary" href="{{ path('answer_topic', {'nomCat': posteur[0].topic.idSousCategorie.idCategorie.nom, 'nomSousCat': posteur[0].topic.idSousCategorie.nom, 'titreTopic': posteur[0].topic.titre, 'pseudoTarget' : posteur[0].posteur.login }) }}" style="color: white; font-size: 10px; margin-bottom: 5px;">
+												<span class="glyphicon glyphicon-search"></span>
+												Ouvrir la boîte de dialogue
+											</a>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<p>Aucune boîte de dialogues n'a encore été ouverte avec vous. Patientez encore un peu !</p>
+			{% endif %}
+
+		</div>
+	</div>
+
+	{# Historique des messages reçus #}
+	<div class="card" style="width: 49%; display: inline-block; padding: 5px; min-height: 500px;">
+		<div class="card-header" style="margin-bottom: 10px;">
+			<b style="font-size: 20px;">Derniers messages reçus</b>
+		</div>
+		<div class="card-body">
+			{# On parcourt les messages reçus par le créateur du topic #}
+			{% if posteurs is defined %}
+				{% for message in messages|slice(0, 3) %}
+					{% if message.idTopic.idSousCategorie is not null %}
+						<div class="card mb-3" style="max-width: 540px; margin: auto auto;">
+							<div class="row no-gutters">
+								<img src="{{ asset('img/user.png') }}" class="card-img" style="width: 110px; height: 110px;" alt="...">
+								<div class="col-md-8">
+									<div class="card-body">
+										{# Affichage du pseudo du posteur du message #}
+										<p class="card-text">
+											<b>{{ message.idPosteur.login }}</b> vous a envoyé un message
+										</p>
+										{# Lien vers les boîtes de dialogue #}
+										<a class="btn btn-primary" href="{{ path('answer_topic', {'nomCat': message.idTopic.idSousCategorie.idCategorie.nom, 'nomSousCat': message.idTopic.idSousCategorie.nom, 'titreTopic': message.idTopic.titre, 'pseudoTarget' : message.idPosteur.login }) }}" style="color: white; font-size: 10px; margin-bottom: 5px;">
+											<span class="glyphicon glyphicon-search"></span>
+											Afficher le message
+										</a>
+										{# Date et heure d'envoi du message #}
+										<p class="card-text">
+											<small class="text-muted">{{ message.dateEnvoi | date('d-m-Y à H:i:s') }}</small>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<p>Vous n'avez aucune réponse. Patientez encore un peu !</p>
+			{% endif %}
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

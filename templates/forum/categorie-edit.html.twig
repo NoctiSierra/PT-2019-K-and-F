@@ -1,0 +1,60 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %} - Ajouter un Topic{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+        <h1 class="display-2">{{ categorie.nom }}</h1>
+    </div>
+
+    {{ form_start(form) }}
+
+    <div class="card" style="margin-top: 50px;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('show_categorie', {'nomCat': categorie.nom }) }}">
+                        {{ categorie.nom }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active disabled">Modifier une Catégorie</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body" style="padding-bottom: 50px; width: 60%; margin: auto auto;">
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-header" style="font-size: 22px; margin-bottom: 10px; text-align: center;">
+                    <b>Modifier une catégorie</b>
+                </div>
+                <div class="card-body" style="font-size: 18px; width: 80%; margin: auto auto; margin-bottom: 10px;">
+                    <p class="card-text" style="margin-bottom: 20px;">
+                        Nom de la catégorie: {{ form_widget(form.nom) }}
+                    </p>
+                    <p class="card-text">
+                        Description: {{ form_widget(form.description) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-right: auto; margin-left: auto; text-align: center; margin-top: 50px;">
+        {{ form_widget(form.confirmer) }}
+        <a class="btn btn-secondary" href="{{ path('show_categorie', {'nomCat': categorie.nom }) }}">
+            Annuler
+        </a>
+    </div>
+
+    {{ form_end(form) }}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - {{ fiche.title }}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('fiche_entraide_benevolat') }}" class="btn btn-primary">Retour</a>
+
+    <div class="container">
+        <h1 class="display-3">{{ fiche.title }}</h1>
+        <small class="text-muted">Écrit par {{ fiche.author.nom }} le {{ fiche.createdAt | date('d/m/Y') }} à {{ fiche.createdAt | date('H:i') }}</small>
+        <hr class="my-4">
+        <p class="lead">
+          {{ fiche.content | nl2br }}       
+        </p>
+        {% if is_granted('ROLE_ADMIN') or (app.user == fiche.author) %} 
+          <div class="text-center">
+            <a href="{{ path('fiche_edit', {'id': fiche.id}) }}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" style="color: white;"></span> Modifier</a>
+            <a href="{{ path('fiche_delete', {'id': fiche.id}) }}" class="btn btn-danger"><span class="glyphicon glyphicon-remove" style="color: white;"></span> Supprimer</a>
+          </div>
+        {% endif %}
+      </div>
+
+{% endblock %}

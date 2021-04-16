@@ -1,0 +1,223 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %}Forum Kids&Family{% endblock %}
+
+{% block body %}
+
+{# Message comportant le guide #}
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">
+                    <b>Guide</b>
+                </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                {% if is_granted('ROLE_ADMIN') %}
+                    
+                    <h4>
+                        <b>Gestion des catégories:</b>
+                    </h4>
+                    
+                    <h5>
+                        <i>Ajouter une catégorie:</i>
+                    </h5>
+                    <a class="btn btn-success" style="color: white;">
+                        <span class="glyphicon glyphicon-plus" style="color: white;"></span>
+                        Ajouter une catégorie
+                    </a>
+                    <p>
+                        Renvoie vers une page dans laquelle vous pourrez entrer le nom
+                        et la description de la catégorie à créer.
+                    </p>
+                    <br>
+                    
+                    <h5>
+                        <i>Modifier une catégorie:</i>
+                    </h5>
+                    <a class="btn btn-warning" style="color: white;">
+                        <span class="glyphicon glyphicon-pencil" style="color: white;"></span>
+                    </a>
+                    <p>
+                        Renvoie vers une page dans laquelle vous pourrez modifier le nom
+                        de la catégorie et également sa description.
+                    </p>
+                    <br>
+                    
+                    <h5>
+                        <i>Supprimer une catégorie:</i>
+                    </h5>
+                    <a class="btn btn-danger" style="color: white;">
+                        <span class="glyphicon glyphicon-remove" style="color: white;"></span>
+                    </a>
+                    <p>
+                        Renvoie un message de confirmation. Si vous maintenez la suppression,
+                        tous les composants associés à la catégorie seront supprimés (sous-catégories, topics).
+                    </p>
+
+                {% else %}
+                    <p>
+                        Vous souhaitez aider une personne ? Une association ? Ou encore un établissement ?
+                        Ou avez-vous besoin d'une aide particulière ?<br><br>
+                        Pour cela, rendez-vous dans l'une des sous-catégories affichées afin de visionner
+                        les topics qui correspondent à vos besoins !
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{# Message de bienvenue #}
+<div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+    <h1 class="display-2">Forum</h1>
+    <p>
+        <b>Bienvenue sur le Forum privé de Kids&Family !</b><br>
+        Si vous avez besoin d'informations ou d'aide particulière, n'hésitez pas
+        à poster un topic !
+    </p>
+</div>
+
+
+{# Visible uniquement par les ADMIN --> Création d'une nouvelle catégorie #}
+{% if is_granted('ROLE_ADMIN') %}
+    <div style="text-align: center; margin-bottom: 20px;">
+        {# Droit d'ajouter une catégorie #}
+        <a class="btn btn-success" href="{{ path('add_categorie') }}">
+            <span class="glyphicon glyphicon-plus"></span>
+            Ajouter une catégorie
+        </a>
+    </div>
+{% endif %}
+
+
+<div class="card" style="min-height: 580px;">
+
+    {# Fil d'Arianne #}
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active disabled">Home</a>
+            </li>
+        </ul>
+    </div>
+
+    {# Affichage des catégories et sous-catégories #}
+    <div class="card-body" style="width: 90%; margin: auto auto; margin-bottom: 70px;">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        {# Droit uniquement aux ADMIN de gérer les catégories (Modifier et supprimer) #}
+                        <th style="width: 20%;">CATEGORIES</th>
+                        <th style="width: 30%;">SOUS-CATEGORIES</th>
+                        <th style="width: 5%;">GESTION</th>
+                        {% else %}
+                        {# Si n'est pas ADMIN, il ne peut pas gérer les catégories #}
+                        <th style="width: 20%;">CATEGORIES</th>
+                        <th style="width: 20%;">SOUS-CATEGORIES</th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            {# Guide #}
+            <div style="text-align: right; padding: 10px; font-size: 25px;">
+                <a data-toggle="modal" data-target="#exampleModalScrollable" href="#">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </a>
+            </div>
+
+            <tbody>
+                {# On parcourt toutes les catégories de la base de données #}
+                {% for categorie in categories | reverse %}
+                    {# Pour chaque catégorie, on ajoute une ligne au tableau... #}
+                    <tr>
+                        {# Dans la première colonne... #}
+                        <td>
+                            {# ... on affiche le nom et la description de la catégorie #}
+                            <p>
+                                <b style="font-size: 18px;">{{ categorie.nom }}</b>
+                                <br>
+                                {{ categorie.description }}
+                            </p>
+                        </td>
+                        {# Dans la deuxième colonne... #}
+                        <td>
+                            {# ... on affiche toutes les sous-catégories appartenant à la catégorie et le nombre de topics qu'elles contiennent #}
+                            {% for sousCategorie in categorie.sousCategories %}
+                                {# Chaque sous-catégorie possède un lien vers le visionnage des topics #}
+                                <a href="{{ path('list_topics', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}" class="badge badge-dark">
+                                    {{ sousCategorie.nom }} ({{ sousCategorie.topics | length }})
+                                </a>
+                            {% endfor %}
+                        </td>
+                        {# Dans le cas où il s'agit d'un ADMIN... #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {# On afiche une colonne en plus dans laquelle on peut gérer les catégories #}
+                            <td>
+                                {# Dirige vers le gestionnaire des catégories #}
+                                <a class="btn btn-warning" href="{{ path('show_categorie', {'nomCat': categorie.nom}) }}">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+
+                                {# Possibilité de supprimer une catégorie #}
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+
+                                {# Message de confirmation de la suppression d'une catégorie #}
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="exampleModalLabel">
+                                                    <b>Supprimer une catégorie</b>
+                                                </h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous sûr de vouloir supprimer cette catégorie ?<br>
+                                                Tous les composants reliés à cette catégorie seront supprimés (sous-catégories et topics).<br>
+                                            </div>
+                                            <div class="modal-footer">
+                                                
+                                                <a class="btn btn-danger" href="{{ path('delete_categorie', {'nomCat': categorie.nom}) }}">
+                                                    Supprimer
+                                                </a>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Fermer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {# Pagination des catégories #}
+        <div style="font-size: 16px; position: absolute; bottom: 0px; width: 80%; text-align: center;">
+            {{ knp_pagination_render(categories) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

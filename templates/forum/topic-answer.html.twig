@@ -1,0 +1,108 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+{#
+<div id="commentaires">
+        <Commentaires idCategorie={{ categorie.id }}></Commentaires>
+</div>
+#}
+
+
+{{ form_start(form) }}
+
+    <div class="card" style="margin-top: 50px;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('show_categorie', {'nomCat': categorie.nom}) }}">
+                            {{ categorie.nom }}
+                        </a>
+                        {% else %}
+                            <a class="nav-link" href="{{ path('home_forum') }}">
+                                {{ categorie.nom }}
+                            </a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('list_topics', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                        {{ sousCategorie.nom }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('show_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+                        {{ topic.titre }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active disabled">Répondre à un Topic</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body" style="padding-bottom: 50px; width: 50%; margin: auto auto;">
+
+            {#% if (messages | length) == 0 %}
+                <p style="font-size: 15px;">
+                    Vous vous apprêtez à répondre à un message de <b>{{ topic.idUtilisateur.login }}</b> s'intitulant :<br>{{ topic.titre }}.
+                </p>
+            {% endif %#}
+            
+            {% for message in messages %}
+                {%
+                    if  ((message.idPosteur == currentUser) and
+                        (message.idDestinataire == target))
+                        or
+                        ((message.idPosteur == target) and
+                        (message.idDestinataire == currentUser))
+                %}
+                    {% if currentUser == message.idPosteur %}
+                        <div class="media" style="margin-top: 20px;">
+                            <img src="{{ asset('img/message_gauche.png') }}" style="width: 64px; height: 64px;" class="align-self-start mr-3" alt="...">
+                            <div class="media-body border border-light rounded" style="padding: 10px; background-color: #EEE4F2;">
+                                <h5 class="mt-0 mb-1"><b>{{ message.idPosteur.login }}</b></h5>
+                                <p>{{ message.contenu |nl2br }}</p>
+                                <small class="text-muted">{{ message.dateEnvoi | date('d-m-Y à H:i:s') }}</small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="media" style="margin-top: 20px;">
+                            <div class="media-body border border-light rounded" style="text-align: right; padding: 10px; background-color: #EEE4F2;">
+                                <h5 class="mt-0 mb-1"><b>{{ message.idPosteur.login }}</b></h5>
+                                <p>{{ message.contenu |nl2br }}</p>
+                                <small class="text-muted">{{ message.dateEnvoi | date('d-m-Y à H:i:s') }}</small>
+                            </div>
+                            <img src="{{ asset('img/message_droite.png') }}" style="width: 64px; height: 64px; margin: 10px;" class="align-self-start mr-3" alt="...">
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            <p class="card-text" style="margin-top: 20px; font-size: 18px;">
+                Message:
+            </p>
+            <p class="card-text" style="margin-top: 10px; font-size: 18px;">
+                {{ form_widget(form.contenu) }}
+            </p>
+            <div>
+                {{ form_widget(form.envoyer) }}
+            </div>
+            
+        </div>
+    </div>
+
+    <div style="margin-right: auto; margin-left: auto; text-align: center; margin-top: 50px;">
+        <a class="btn btn-secondary" href="{{ path('show_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+            Retour
+        </a>
+    </div>
+
+{{ form_end(form) }}
+
+{% endblock %}

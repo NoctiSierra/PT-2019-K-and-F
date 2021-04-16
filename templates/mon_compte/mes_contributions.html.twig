@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+
+<div class="jumbotron">
+    <a href="{{ path('mon_compte') }}" class="btn btn-primary">Retour</a>
+
+    <h1>Modification de votre description</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+
+    <button type="submit" class="btn btn-success">
+        Enregistrer les modifications
+    </button>
+	
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}

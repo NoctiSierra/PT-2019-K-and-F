@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - Entraide / Bénévolat{% endblock %}
+
+{% block body %}
+
+<div class="container mx-auto">
+    <div>
+        <h1>Entraide et bénévolat</h1>
+        <p class="">Sélectionnez le type de fiche qui vous intéresse :</p>
+    </div>
+    <div class="row">
+        <div class="card col-4 border-dark mb-3">
+        <div class="card-header"><h2>Bénévole / Talent</h2></div>
+        <div class="card-body">
+            <p>La fiche "Bénévole & talents" :</p>
+            <p>Une présentation synthétique des personnes et ce qu'elles proposent comme aide, service, à l'aide de leurs compétences, leurs moyens matériels, financier.</p>
+        </div>
+        <div class="card-footer text-center"><a href="{{ path('fiche_benevole_talent') }}" class="btn btn-primary mx-auto">Voir les fiches</a></div>
+    </div>
+    <div class="card col-4 border-dark mb-3">
+        <div class="card-header"><h2>Projet</h2></div>
+        <div class="card-body">
+            <p>La fiche "Projet" :</p>
+            <p>Une présentation synthétique des personnes et de leur projet avec une liste de leurs besoins qui en permettront l’aboutissement (bénévole, bien matériel, financier).</p>
+        </div>
+        <div class="card-footer text-center"><a href="{{ path('fiche_projet') }}" class="btn btn-primary">Voir les fiches</a></div>        
+    </div>
+    <div class="card col-4 border-dark mb-3">
+        <div class="card-header"><h2>Don</h2></div>
+        <div class="card-body">
+            <p>La fiche "Don" :</p>
+            <p>Une présentation synthétique des personnes et de ce qu'elles peuvent donner (bien matériel, financier)</p><br>
+        </div>
+        <div class="card-footer text-center"><a href="{{ path('fiche_don') }}" class="btn btn-primary">Voir les fiches</a></div>
+    </div>
+    </div>
+
+    <div class="text-center">
+        <a href="{{ path('fiche_create') }}" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-plus" style="color: white;"></span> Nouvelle fiche</a>
+    </div>
+</div>
+
+{% endblock %}

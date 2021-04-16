@@ -1,0 +1,303 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %} - {{ topic.titre }}{% endblock %}
+
+{% block body %}
+
+{# Message comportant le guide #}
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">
+                    <b>Besoin d'aide ?</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if currentUser != user %}
+                    <p>
+                        Vous souhaitez répondre à ce topic ? Alors n'hésitez pas à ouvrir une
+                        boîte de dialogue ! Pour cela, appuyez sur le bouton suivant:
+                    </p>
+                    <a class="btn btn-success" style="color: white; margin-top: 5px; margin-bottom: 5px;">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        Ouvrir la boîte de dialogue
+                    </a>
+                    <p>
+                        Afin de continuer votre discussion, rendez-vous sur votre espace membre !
+                    </p>
+                {% else %}
+                    <p>
+                        Vous venez tout juste de créer un topic ?<br>
+                        Afin de vous aider dans la compréhension de cette page, voici les informations
+                        à savoir:
+                    </p>
+                    <br>
+                    <h5>
+                        <b>Résoudre un topic:</b>
+                    </h5>
+                    <a class="btn btn-success" style="color: white; margin-bottom: 10px;">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Ce Topic est résolu !
+                    </a>
+                    <p>
+                        Vous pouvez admettre votre topic comme résolu lorsque vous estimez que le sujet de votre
+                        topic est clôt. Ce topic ne sera donc plus visible pour les autres utilisateurs et y répondre
+                        ne sera plus possible.<br>
+                        En revanche, vous pourrez continuer de consulter les messages qui y sont
+                        associés et vous pourrez continuer vos discussions. Pour cela, il vous suffit de vous rendre
+                        dans votre espace membre !
+                    </p>
+                    <br>
+                    <h5>
+                        <b>Modifier un topic:</b>
+                    </h5>
+                    <a class="btn btn-warning" style="color: white;">
+                        <span class="glyphicon glyphicon-pencil" style="color: white; margin-bottom: 10px;"></span>
+                        Modifier ce Topic
+                    </a>
+                    <br>
+                    <p>
+                        Si jamais vous souhaitez modifier le contenu de votre topic tels que son titre et le message
+                        que vous souhaitez divulguer, appuyez sur ce bouton. Il vous dirigera vers une page vous
+                        permettant de modifier votre topic.
+                    </p>
+                    <br>
+                    <h5>
+                        <b>Supprimer un topic:</b>
+                    </h5>
+                    <a class="btn btn-danger" style="color: white;">
+                        <span class="glyphicon glyphicon-remove" style="color: white; margin-bottom: 10px;"></span>
+                        Supprimer ce Topic
+                    </a>
+                    <p>
+                        Si vous souhaitez supprimer définivement votre topic, appuyez sur ce bouton-ci. Un message de
+                        confirmation s'affichera.Si vous maintenez sa suppression, votre topic ainsi que
+                        tous les messages associés à celui-ci disparaîtront.
+                    </p>
+                    <br>
+                    <h5>
+                        <b>Boîtes de dialogues:</b>
+                    </h5>
+                    <p>
+                        Toutes les personnes ayant répondu à votre topic s'afficheront ici. Les boîtes de dialogues
+                        permettent de faciliter votre accès aux discussions privées déjà entreprises. Ces mêmes boîtes
+                        de dialogues sont également accessibles dans votre espace membre !
+                    </p>
+                    <br>
+                    <h5>
+                        <b>Messages reçus:</b>
+                    </h5>
+                    <p>
+                        Toutes les personnes vous ayant récemment envoyé des messages seront affichées ici.
+                    </p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 50px;">
+
+    {# Fil d'Arianne #}
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            {# On affiche un lien vers l'accueil du forum #}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                {# On affiche le lien vers la gestion des catégories si la personne connectée est ADMIN #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('show_categorie', {'nomCat': categorie.nom}) }}">
+                        {{ categorie.nom }}
+                    </a>
+                {# Sinon, on affiche un lien vers l'accueil du forum #}
+                {% else %}
+                    <a class="nav-link" href="{{ path('home_forum') }}">
+                        {{ categorie.nom }}
+                    </a>
+                {% endif %}
+            </li>
+            {# On affiche un lien vers la liste des topics de la sous-catégorie #}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('list_topics', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">{{ sousCategorie.nom }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active disabled">{{ topic.titre }}</a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card-body" style="padding-bottom: 50px; width: 80%; margin: auto auto;">
+
+        <div class="media" style="margin-top: 20px; margin-bottom: 20px;">
+            <img src="{{ asset('img/message_gauche.png') }}" style="width: 64px; height: 64px;" class="align-self-start mr-3" alt="...">
+            <div class="media-body border border-light" style="border-radius: 30px; padding: 20px; background-color: #F2F2F2;">
+                <h5 class="mt-0 mb-1" style="font-size: 20px;">
+                    {# Affichage du nom de l'utilisateur connecté #}
+                    <a style="text-decoration:none; color: #424242;" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <span class="glyphicon glyphicon-user" style="font-size: 30px; margin-right: 5px;"></span>
+                        {# Si l'utilisateur actuel est le créateur du topic... #}
+                        {% if user == currentUser %}
+                            <b>{{ currentUser.login }} (Vous)</b>
+                        {# Sinon... #}
+                        {% else %}
+                            <b>{{ user.login }}</b>
+                        {% endif %}
+                    </a>
+                </h5>
+                {# Desciption de l'utilisateur #}
+                <div class="collapse" id="collapseExample" style="background-color: #F2F2F2;">
+                    <div class="card card-body" style="font-size: 18px; padding: 15px; background-color: #F2F2F2; border-width: 0px; border-left-width: 2px;">
+                        <p>{{ user.description }}</p>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 20px; padding: 15px; background-color: #F2F2F2; border-width: 0px; border-left-width: 2px;">
+                    {# Affichage du titre du topic #}
+                    <p style="font-size: 20px;"><b>{{ topic.titre }}</b></p>
+                    {# Affichage du contenu du topic en prenant en compte les sauts de ligne #}
+                    <p style="font-size: 17px; margin-top: 10px;">{{ topic.contenu |nl2br }}</p>
+                </div>
+                <div style="margin-top: 10px; font-size: 15px;">
+                    {# Affichage de la date et de l'heure de création du topic #}
+                    <small class="text-muted">Créé le {{ topic.dateHeureCreation | date('d-m-Y à H:i:s') }}</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div style="margin-right: auto; margin-left: auto; text-align: center; margin-top: 50px; margin-bottom: 50px;">
+    {# Si l'utilisateur actuel est le créateur du topic... #}
+    {% if user == currentUser %}
+        {# On affiche la possibilité de résoudre le topic... (le topic ne sera plus visible) #}
+        <a class="btn btn-success" href="{{ path('resolve_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+            <span class="glyphicon glyphicon-ok"></span>
+            Ce Topic est résolu !
+        </a>
+        {# de modifier le topic (titre et contenu) #}
+        <a class="btn btn-warning" href="{{ path('edit_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Modifier ce Topic
+        </a>
+        {# de supprimer le topic #}
+        <a class="btn btn-danger" href="{{ path('delete_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Supprimer ce Topic
+        </a>
+        {# Sinon, on donne la possibilité à l'utilisateur actuel d'ouvrir une boîte de dialogue avec le créateur #}
+    {% else %}
+        <a class="btn btn-success" href="{{ path('answer_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre, 'pseudoTarget': user.login }) }}">
+            <span class="glyphicon glyphicon-comment"></span>
+            Ouvrir une boîte de dialogue
+        </a>
+    {% endif %}
+    {# Guide #}
+
+        <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable" href="#">
+            <span class="glyphicon glyphicon-info-sign"></span>
+            Besoin d'aide ?
+        </a>
+</div>
+
+<div style="display: block; margin-top: 30px; text-align: center; margin-bottom: 50px;">
+
+	{# On affiche les boîtes de dialogues ouvertes et l'historique des messages reçus #}
+	<div class="card" style="width: 48%; display: inline-block; vertical-align: top; padding: 5px; margin-right: 20px; min-height: 500px;">
+		<div class="card-header" style="margin-bottom: 10px;">
+			<b style="font-size: 20px;">Boîtes de dialogues</b>
+		</div>
+		<div class="card-body">
+			{# On parcourt les personnes qui ont répondu au topic #}
+			{% if posteurs is defined %}
+				{% for posteur in posteurs %}
+					{% if posteur[0].topic.idSousCategorie is not null %}
+						<div class="card mb-3" style="max-width: 540px; margin: auto auto;">
+							<div class="row no-gutters">
+								<img src="{{ asset('img/user.png') }}" class="card-img" style="width: 110px; height: 110px;" alt="...">
+								<div class="col-md-8">
+									<div class="card-body">
+										{# Affichage du pseudo de la personne qui a répondu au topic #}
+										<p class="card-text">
+											Une boîte de dialogue a été ouverte avec vous par<br>
+											<b>{{ posteur[0].posteur.login }}</b> concernant le topic <br>
+											<a href="{{ path('show_topic', {'nomCat': posteur[0].topic.idSousCategorie.idCategorie.nom, 'nomSousCat': posteur[0].topic.idSousCategorie.nom, 'titreTopic': posteur[0].topic.titre }) }}">
+												{{ posteur[0].topic.titre }}
+											</a>
+										</p>
+										{# Accès vers la boîte de dialogue #}
+										{% if posteur[0].topic.idSousCategorie != null %}
+											<a class="btn btn-primary" href="{{ path('answer_topic', {'nomCat': posteur[0].topic.idSousCategorie.idCategorie.nom, 'nomSousCat': posteur[0].topic.idSousCategorie.nom, 'titreTopic': posteur[0].topic.titre, 'pseudoTarget' : posteur[0].posteur.login }) }}" style="color: white; font-size: 10px; margin-bottom: 5px;">
+												<span class="glyphicon glyphicon-search"></span>
+												Ouvrir la boîte de dialogue
+											</a>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<p>Aucune boîte de dialogues n'a encore été ouverte avec vous.<br>Patientez encore un peu !</p>
+			{% endif %}
+
+		</div>
+	</div>
+
+	{# Historique des messages reçus #}
+	<div class="card" style="width: 48%; display: inline-block; padding: 5px; min-height: 500px;">
+		<div class="card-header" style="margin-bottom: 10px;">
+			<b style="font-size: 20px;">Derniers messages reçus</b>
+		</div>
+		<div class="card-body">
+			{# On parcourt les messages reçus par le créateur du topic #}
+			{% if posteurs is defined %}
+				{% for message in messages|slice(0, 3) %}
+					{% if message.idTopic.idSousCategorie is not null %}
+						<div class="card mb-3" style="max-width: 540px; margin: auto auto;">
+							<div class="row no-gutters">
+								<img src="{{ asset('img/user.png') }}" class="card-img" style="width: 110px; height: 110px;" alt="...">
+								<div class="col-md-8">
+									<div class="card-body">
+										{# Affichage du pseudo du posteur du message #}
+										<p class="card-text">
+											<b>{{ message.idPosteur.login }}</b> vous a envoyé un message
+										</p>
+										{# Lien vers les boîtes de dialogue #}
+										<a class="btn btn-primary" href="{{ path('answer_topic', {'nomCat': message.idTopic.idSousCategorie.idCategorie.nom, 'nomSousCat': message.idTopic.idSousCategorie.nom, 'titreTopic': message.idTopic.titre, 'pseudoTarget' : message.idPosteur.login }) }}" style="color: white; font-size: 10px; margin-bottom: 5px;">
+											<span class="glyphicon glyphicon-search"></span>
+											Afficher le message
+										</a>
+										{# Date et heure d'envoi du message #}
+										<p class="card-text">
+											<small class="text-muted">{{ message.dateEnvoi | date('d-m-Y à H:i:s') }}</small>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<p>Vous n'avez aucune réponse.<br>Patientez encore un peu !</p>
+			{% endif %}
+        </div>
+        {# Pagination des messages reçus #}
+        <div style="text-align: center;">
+            {{ knp_pagination_render(messages) }}
+        </div>
+	</div>
+
+</div>
+
+{% endblock %}

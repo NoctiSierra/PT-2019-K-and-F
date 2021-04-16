@@ -1,0 +1,133 @@
+{% extends 'base_forum.html.twig' %}
+
+{% block title %} - {{ sousCategorie.nom }}{% endblock %}
+
+{% block body %}
+
+{# Message comportant le guide #}
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">
+                    <b>Guide</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Si un sujet de topic vous semble intéressant, n'hésitez pas à cliquer sur le titre de ce topic et à
+                    ouvrir une boîte de dialogue avec le créateur afin de l'aider !<br>
+                    Si, au contraire, vous souhaitez obtenir de l'aide, vous pouvez créer un topic en cliquant sur
+                    le bouton ci-dessous:
+                </p>
+                <a class="btn btn-success" style="color: white;">
+                    <span class="glyphicon glyphicon-plus" style="color: white;"></span>
+                    Ajouter un topic
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Affichage du nom et de la description de la catégorie #}
+<div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+    <h1 class="display-2">{{ categorie.nom }}</h1>
+    <p>{{ categorie.description }}</p>
+    {# Guide #}
+    <a style="font-size: 25px;" data-toggle="modal" data-target="#exampleModalScrollable" href="#">
+        <span class="glyphicon glyphicon-info-sign"></span>
+    </a>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+
+    {# Fil d'Arianne #}
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home_forum') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                {# On affiche le lien vers la gestion des catégories si la personne connectée est ADMIN #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('show_categorie', {'nomCat': categorie.nom}) }}">
+                        {{ categorie.nom }}
+                    </a>
+                {# Sinon, on affiche un lien vers l'accueil du forum #}
+                {% else %}
+                    <a class="nav-link" href="{{ path('home_forum') }}">
+                        {{ categorie.nom }}
+                    </a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active disabled">{{ sousCategorie.nom }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-body" style="padding-bottom: 50px; width: 70%; margin: auto auto; margin-bottom: 70px;">
+
+        <div style="text-align: right; margin-bottom: 9px;">
+
+            {# Ajouter un nouveau topic #}
+            <a class="btn btn-success" href="{{ path('add_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom }) }}">
+                <span class="glyphicon glyphicon-plus"></span>
+                Ajouter un Topic
+            </a>
+
+        </div>
+
+        {# On parcourt l'ensemble des topics de la sous-catégorie précédemment sélectionnée #}
+        {% for topic in sousCategorie.topics|reverse %}
+            <div class="media">
+                <img src="{{ asset('img/message_gauche.png') }}" style="width: 64px; height: 64px;" class="align-self-start mr-3" alt="...">
+                <div class="media-body" style="border-radius: 30px; padding: 20px; background-color: #F2F2F2;">
+                    <h3 class="mt-0">
+                        {# On affiche le titre du topic et le lien vers l'affichage du contenu de ce topic #}
+                        <a style="text-decoration: none;" href="{{ path('show_topic', {'nomCat': categorie.nom, 'nomSousCat': sousCategorie.nom, 'titreTopic': topic.titre }) }}">
+                            {{ topic.titre }}
+                        </a>
+                    </h3>
+                    <h5>
+                        {# Affichage du nom du créateur du topic #}
+                        Par <b>{{ topic.idUtilisateur.login }}</b>
+                    </h5>
+                    <table>
+                        <tr>
+                            <td style="width: 50%;">
+                                {# Affichage du nombre de réponses qu'a reçu ce topic #}
+                                {{ topic.messages | length }} réponses
+                            </td>
+                            <td style="width: 50%;">
+                                {# Date et heure de création de ce topic #}
+                                Créé le {{ topic.dateHeureCreation | date('d-m-Y à H:i:s') }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# Pagination des topics #}
+        <div style="font-size: 16px; position: absolute; bottom: 0px; width: 80%; text-align: center;">
+            {{ knp_pagination_render(topics) }}
+        </div>
+
+    </div>
+</div>
+
+{# Retour #}
+<div style="text-align: center; margin-top: 50px;">
+    <a class="btn btn-secondary" href="{{ path('home_forum') }}">
+        Retour
+    </a>
+</div>
+
+{% endblock %}
